@@ -151,7 +151,7 @@ public class MethodVisitor extends EmptyVisitor {
     public void visitINVOKEDYNAMIC(INVOKEDYNAMIC i) {
         addMethodCalls("D", i.getType(cp).toString(), i.getMethodName(cp), i.getArgumentTypes(cp));
 
-        Constant constant = cp.getConstant(i.getIndex());
+        Constant constant = cp.getConstant(i.getIndex()); // 这里index指的是什么？
         if (!(constant instanceof ConstantInvokeDynamic)) {
             return;
         }

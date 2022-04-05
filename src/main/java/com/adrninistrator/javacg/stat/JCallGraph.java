@@ -575,6 +575,7 @@ public class JCallGraph {
             // 对一个Class进行预处理
             preHandleClass(javaClass);
         } else if (javaClass.isInterface()) {
+            // 存储接口的所有抽象方法
             Method[] methods = javaClass.getMethods();
             if (methods != null && methods.length > 0 &&
                     interfaceMethodWithArgsMap.get(className) == null) {
@@ -601,7 +602,14 @@ public class JCallGraph {
         }
     }
 
-    // 对一个Class进行预处理
+    //
+
+    /**
+     * 对一个Class进行预处理；判断当前class是否存在实现接口或重写方法
+     * ① classInterfaceMethodInfoMap：存储当前实现接口的类中可能重写的方法
+     * ② runnableImplClassMap、callableImplClassMap：存储当前类是否实现runnable、callable
+     * @param javaClass
+     */
     private void preHandleClass(JavaClass javaClass) {
         String className = javaClass.getClassName();
         String[] interfaceNames = javaClass.getInterfaceNames();
@@ -634,7 +642,12 @@ public class JCallGraph {
         }
     }
 
-    // 查找涉及继承的类的信息
+    /**
+     * 在第二轮处理class文件时，查找涉及继承的类的信息
+     * childrenClassInfoMap： 缓存<父类Name, [子类Name]>
+     * extendsClassMethodInfoMap: 当前的类信息进行缓存(是否是抽象类，父类名称，抽象方法签名)
+     * @param javaClass
+     */
     private void findExtendsClassesInfo(JavaClass javaClass) {
         String className = javaClass.getClassName();
         if (extendsClassMethodInfoMap.get(className) != null) {
